@@ -1,12 +1,12 @@
 #!/usr/bin/env bun
 /**
- * Validate the canonical RFD records: open GitHub issues in dekaruntime/rfd.
+ * Validate the canonical APS records: open GitHub issues in this repository.
  *
- * The issue body and exactly one lifecycle label are the only source of an
- * RFD's text and state. There are intentionally no checked-in RFD copies to
+ * The issue body and at most one lifecycle label are the only source of an
+ * APS entry's text and state. There are intentionally no checked-in copies to
  * reconcile with the issue API.
  */
-const REPO = 'dekaruntime/rfd'
+const REPO = process.env.GITHUB_REPOSITORY ?? 'dekaruntime/aps'
 export const STATES = [
   'prediscussion',
   'ideation',
@@ -27,7 +27,7 @@ type Issue = {
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
 const headers: Record<string, string> = {
   accept: 'application/vnd.github+json',
-  'user-agent': 'dekaruntime-rfd-validate',
+  'user-agent': 'dekaruntime-aps-validate',
 }
 if (token) headers.authorization = `Bearer ${token}`
 
@@ -49,38 +49,38 @@ async function openIssues(): Promise<Issue[]> {
 }
 
 const problems: string[] = []
-let rfds: Issue[] = []
+let entries: Issue[] = []
 
 try {
-  rfds = (await openIssues()).filter((issue) => !issue.pull_request)
+  entries = (await openIssues()).filter((issue) => !issue.pull_request)
 } catch (error) {
-  console.error(`\n✗ could not read canonical RFD issues: ${(error as Error).message}\n`)
+  console.error(`\n✗ could not read canonical APS issues: ${(error as Error).message}\n`)
   process.exit(1)
 }
 
-for (const rfd of rfds) {
-  if (rfd.title.trim().length < 3) {
-    problems.push(`RFD #${rfd.number}: title must contain at least 3 characters`)
+for (const entry of entries) {
+  if (entry.title.trim().length < 3) {
+    problems.push(`APS #${entry.number}: title must contain at least 3 characters`)
   }
-  if (!rfd.body?.trim()) {
-    problems.push(`RFD #${rfd.number}: issue body is empty`)
+  if (!entry.body?.trim()) {
+    problems.push(`APS #${entry.number}: issue body is empty`)
   }
 
-  const labels = rfd.labels.map((label) => (typeof label === 'string' ? label : label.name))
+  const labels = entry.labels.map((label) => (typeof label === 'string' ? label : label.name))
   const states = labels.filter((label) => (STATES as readonly string[]).includes(label))
-  if (states.length !== 1) {
+  if (states.length > 1) {
     problems.push(
-      `RFD #${rfd.number}: expected exactly one lifecycle label ` +
-        `(${STATES.join(', ')}), found ${states.length === 0 ? 'none' : states.join(', ')}`,
+      `APS #${entry.number}: expected at most one lifecycle label ` +
+        `(${STATES.join(', ')}), found ${states.join(', ')}`,
     )
   }
 }
 
 if (problems.length > 0) {
-  console.error(`\n✗ ${problems.length} RFD issue problem(s):\n`)
+  console.error(`\n✗ ${problems.length} APS issue problem(s):\n`)
   for (const problem of problems) console.error(`  ${problem}`)
   console.error('')
   process.exit(1)
 }
 
-console.log(`✓ ${rfds.length} open RFD issue(s) valid`)
+console.log(`✓ ${entries.length} open APS issue(s) valid`)

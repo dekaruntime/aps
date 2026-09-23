@@ -1,29 +1,31 @@
-# Requests For Discussion
+# Deka APS
 
-Significant Deka changes are proposed, discussed, and recorded as GitHub
-issues in this repository. The issue body and its one lifecycle label are the
-authoritative RFD record and are published at
-[deka.gg/rfd](https://deka.gg/rfd).
+The Agentic Project Schema is the constitutional reference book agents use to
+litigate decisions in Deka. Each entry records a decision agents must honour
+and cite when planning, implementing, reviewing, and maintaining the project.
+Agents read and cite these entries; humans rarely need to read them directly.
 
-## Process
+GitHub assigns each entry its permanent number: **APS N is issue N**. A brief
+or pull request cites `APS N`. Agents write and revise entries from Sami's
+ideas in the issue body and its review history. When an implementation or a
+new argument disputes an entry, amend that entry; the approved issue body is
+the ruling reference.
 
-Open an issue with the RFD template. Its number is the permanent RFD number:
-issue #39 is RFD 39 and lives at `deka.gg/rfd/39`. Write and revise the design
-in the issue body; discussion stays in the issue thread.
+The issue body and its lifecycle label are the canonical record. The website
+publishes open entries directly from GitHub; the repository contains the
+process, validation, and automation, not copied APS bodies. This avoids
+parallel versions that could drift.
 
-Every open RFD must carry exactly one state label:
+## States
+
+Every entry may have at most one lifecycle label:
 
     prediscussion → ideation → discussion → published → committed
                                           ↘ abandoned
 
-`committed` records an accepted decision directly on the issue. It does not
-create a second Markdown record or a promotion pull request. Implementation
-pull requests link back to the RFD; they do not become the RFD's source.
+No lifecycle label means `prediscussion`. `committed` records an accepted
+decision on the issue. State can move in either direction as the design
+changes. Closing an issue removes it from the published index; use `abandoned`
+when a rejected or superseded decision should remain visible.
 
-State can move in either direction as the design changes. Closing an issue
-removes it from the published RFD index; use `abandoned` when a rejected or
-superseded decision should remain visible.
-
-The validator fails when an open RFD has zero or multiple lifecycle labels, so
-the website never guesses at its state. See [RFD 1](https://github.com/dekaruntime/rfd/issues/1)
-for the complete process.
+See [APS 1](https://github.com/dekaruntime/aps/issues/1) for the full process.
