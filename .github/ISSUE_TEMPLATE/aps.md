@@ -1,6 +1,6 @@
 ---
-name: Request for Discussion
-about: Propose or record a significant Deka design decision
+name: Agentic Project Schema
+about: Propose or record a decision agents must honour and cite
 title: ''
 labels: prediscussion
 ---

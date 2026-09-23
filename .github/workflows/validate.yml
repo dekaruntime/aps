@@ -1,7 +1,7 @@
-name: Validate RFDs
+name: Validate APS
 
-# The issue body and lifecycle label are the canonical RFD record. Validate
-# them on repository changes and on every event that can change a live RFD.
+# The issue body and lifecycle label are the canonical APS record. Validate
+# them on repository changes and on every event that can change a live entry.
 on:
   pull_request:
   push:
